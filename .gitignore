@@ -4,3 +4,4 @@ build/
 *.dmg
 *.exe
 .DS_Store
+dist/

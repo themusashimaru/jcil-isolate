@@ -522,6 +522,50 @@
   </style>
 </head>
 <body>
+  <!-- Setup Wizard -->
+  <div id="setup" class="onboarding hidden">
+    <div class="onboarding-card">
+      <h1 style="margin-bottom: 6px;">JCIL Isolate</h1>
+      <p id="setup-status" style="margin-bottom: 20px;">Checking your system...</p>
+
+      <div id="setup-steps" style="text-align: left; margin-bottom: 24px;">
+        <div id="step-ollama" class="setup-step">
+          <span class="step-icon" id="step-ollama-icon">&#9675;</span>
+          <span>Ollama installed</span>
+        </div>
+        <div id="step-running" class="setup-step">
+          <span class="step-icon" id="step-running-icon">&#9675;</span>
+          <span>Ollama running</span>
+        </div>
+        <div id="step-model" class="setup-step">
+          <span class="step-icon" id="step-model-icon">&#9675;</span>
+          <span>JCIL Isolate model ready</span>
+        </div>
+      </div>
+
+      <button id="setup-action-btn" class="onboarding-btn hidden" style="margin-bottom: 10px;">Download Ollama</button>
+      <button id="setup-retry-btn" class="onboarding-btn" style="background: var(--surface-3); margin-bottom: 0;">Retry</button>
+    </div>
+  </div>
+
+  <style>
+    .setup-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      font-size: 13px;
+      color: var(--text-2);
+      border-bottom: 1px solid var(--border);
+    }
+    .setup-step:last-child { border-bottom: none; }
+    .step-icon { font-size: 16px; width: 20px; text-align: center; }
+    .step-icon.done { color: var(--green); }
+    .step-icon.fail { color: var(--red); }
+    .step-icon.loading { color: var(--primary-2); animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+
   <div id="onboarding" class="onboarding hidden">
     <div class="onboarding-card">
       <h1 style="margin-bottom: 6px;">JCIL Isolate</h1>
@@ -601,12 +645,88 @@
     let isGenerating = false;
 
     async function init() {
+      // Run setup check first
+      const setup = await window.api.checkSetup();
+
+      if (!setup.ollamaInstalled || !setup.ollamaRunning || !setup.modelReady) {
+        document.getElementById('setup').classList.remove('hidden');
+        await runSetup(setup);
+        return;
+      }
+
+      // Setup complete, proceed to app
       profile = await window.api.getProfile();
       if (!profile) {
         document.getElementById('onboarding').classList.remove('hidden');
       } else {
         document.getElementById('app').classList.remove('hidden');
         await loadApp();
+      }
+    }
+
+    function setStepStatus(id, status) {
+      const icon = document.getElementById(id + '-icon');
+      if (status === 'done') { icon.innerHTML = '&#10003;'; icon.className = 'step-icon done'; }
+      else if (status === 'fail') { icon.innerHTML = '&#10007;'; icon.className = 'step-icon fail'; }
+      else if (status === 'loading') { icon.innerHTML = '&#9881;'; icon.className = 'step-icon loading'; }
+      else { icon.innerHTML = '&#9675;'; icon.className = 'step-icon'; }
+    }
+
+    async function runSetup(setup) {
+      const statusEl = document.getElementById('setup-status');
+      const actionBtn = document.getElementById('setup-action-btn');
+      const retryBtn = document.getElementById('setup-retry-btn');
+
+      // Step 1: Ollama installed
+      if (setup.ollamaInstalled) {
+        setStepStatus('step-ollama', 'done');
+      } else {
+        setStepStatus('step-ollama', 'fail');
+        statusEl.textContent = 'Ollama is required. Click below to download it (free, 1 minute install).';
+        actionBtn.classList.remove('hidden');
+        actionBtn.textContent = 'Download Ollama';
+        actionBtn.onclick = () => window.api.openOllamaDownload();
+        retryBtn.onclick = () => location.reload();
+        return;
+      }
+
+      // Step 2: Ollama running
+      if (setup.ollamaRunning) {
+        setStepStatus('step-running', 'done');
+      } else {
+        setStepStatus('step-running', 'fail');
+        statusEl.textContent = 'Ollama is installed but not running. Open Ollama from your Applications folder, then click Retry.';
+        retryBtn.onclick = () => location.reload();
+        return;
+      }
+
+      // Step 3: Model
+      if (setup.modelReady) {
+        setStepStatus('step-model', 'done');
+        statusEl.textContent = 'Everything is ready!';
+        setTimeout(() => {
+          document.getElementById('setup').classList.add('hidden');
+          init();
+        }, 1000);
+      } else {
+        setStepStatus('step-model', 'loading');
+        statusEl.textContent = 'Setting up your AI model... This takes about 30 seconds on first launch.';
+        retryBtn.classList.add('hidden');
+
+        const success = await window.api.installModel();
+        if (success) {
+          setStepStatus('step-model', 'done');
+          statusEl.textContent = 'Ready to go!';
+          setTimeout(() => {
+            document.getElementById('setup').classList.add('hidden');
+            init();
+          }, 1500);
+        } else {
+          setStepStatus('step-model', 'fail');
+          statusEl.textContent = 'Model setup failed. Make sure Ollama is running and try again.';
+          retryBtn.classList.remove('hidden');
+          retryBtn.onclick = () => location.reload();
+        }
       }
     }
 

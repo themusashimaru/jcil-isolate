@@ -12,4 +12,7 @@ contextBridge.exposeInMainWorld('api', {
   onChatDone: (callback) => ipcRenderer.on('chat-done', () => callback()),
   removeTokenListener: () => ipcRenderer.removeAllListeners('chat-token'),
   removeDoneListener: () => ipcRenderer.removeAllListeners('chat-done'),
+  checkSetup: () => ipcRenderer.invoke('check-setup'),
+  installModel: () => ipcRenderer.invoke('install-model'),
+  openOllamaDownload: () => ipcRenderer.invoke('open-ollama-download'),
 });

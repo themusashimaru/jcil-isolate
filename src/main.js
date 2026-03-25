@@ -1,7 +1,9 @@
-const { app, BrowserWindow, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, dialog } = require('electron');
 const path = require('path');
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
+const { execSync, spawn } = require('child_process');
 
 let mainWindow;
 const USER_DATA_PATH = path.join(app.getPath('userData'), 'jcil-isolate');
@@ -180,6 +182,58 @@ ipcMain.handle('chat-stream', async (event, messages) => {
     req.write(postData);
     req.end();
   });
+});
+
+// ===== AUTO-SETUP: Ollama + Model =====
+async function isOllamaInstalled() {
+  try {
+    execSync('which ollama 2>/dev/null || test -f /usr/local/bin/ollama || test -d /Applications/Ollama.app');
+    return true;
+  } catch { return false; }
+}
+
+async function isModelInstalled() {
+  try {
+    const result = execSync('ollama list 2>/dev/null || /Applications/Ollama.app/Contents/Resources/ollama list 2>/dev/null').toString();
+    return result.includes('jcil-isolate');
+  } catch { return false; }
+}
+
+function getOllamaCmd() {
+  try { execSync('which ollama'); return 'ollama'; } catch {}
+  if (fs.existsSync('/Applications/Ollama.app/Contents/Resources/ollama')) return '/Applications/Ollama.app/Contents/Resources/ollama';
+  if (fs.existsSync('C:\\Users\\' + process.env.USERNAME + '\\AppData\\Local\\Programs\\Ollama\\ollama.exe'))
+    return 'C:\\Users\\' + process.env.USERNAME + '\\AppData\\Local\\Programs\\Ollama\\ollama.exe';
+  return 'ollama';
+}
+
+async function createModel() {
+  const ollamaCmd = getOllamaCmd();
+  const modelfilePath = path.join(__dirname, '..', 'Modelfile');
+  try {
+    execSync(`${ollamaCmd} create jcil-isolate -f "${modelfilePath}"`, { timeout: 120000 });
+    return true;
+  } catch (e) {
+    console.error('Failed to create model:', e.message);
+    return false;
+  }
+}
+
+// IPC for setup flow
+ipcMain.handle('check-setup', async () => {
+  const ollamaInstalled = await isOllamaInstalled();
+  const ollamaRunning = await checkOllama();
+  const modelReady = ollamaRunning ? await isModelInstalled() : false;
+  return { ollamaInstalled, ollamaRunning, modelReady };
+});
+
+ipcMain.handle('install-model', async () => {
+  return await createModel();
+});
+
+ipcMain.handle('open-ollama-download', () => {
+  shell.openExternal('https://ollama.com/download');
+  return true;
 });
 
 app.whenReady().then(createWindow);
