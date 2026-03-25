@@ -14,11 +14,17 @@ jobs:
         with:
           node-version: 22
       - run: npm install
-      - run: npm run build:mac
+      - name: Build Mac
+        run: npx electron-builder --mac --dir
+      - name: Package Mac ARM
+        run: cd dist/mac-arm64 && zip -r -9 "../JCIL-Isolate-mac-arm64.zip" "JCIL Isolate.app"
+      - name: Package Mac Intel
+        run: cd dist/mac && zip -r -9 "../JCIL-Isolate-mac-x64.zip" "JCIL Isolate.app"
+        continue-on-error: true
       - uses: actions/upload-artifact@v4
         with:
-          name: mac-build
-          path: dist/*.dmg
+          name: mac-builds
+          path: dist/*.zip
 
   build-windows:
     runs-on: windows-latest
@@ -28,7 +34,7 @@ jobs:
         with:
           node-version: 22
       - run: npm install
-      - run: npm run build:win
+      - run: npx electron-builder --win
       - uses: actions/upload-artifact@v4
         with:
           name: windows-build
@@ -37,12 +43,15 @@ jobs:
   release:
     needs: [build-mac, build-windows]
     runs-on: ubuntu-latest
+    if: always()
     permissions:
       contents: write
     steps:
       - uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
       - uses: softprops/action-gh-release@v2
         with:
           files: |
-            mac-build/*.dmg
-            windows-build/*.exe
+            *.zip
+            *.exe
