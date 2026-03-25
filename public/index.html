@@ -6,49 +6,47 @@
   <title>JCIL Isolate</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%236366f1'/><text x='50%25' y='55%25' font-family='Arial' font-size='14' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='middle'>JI</text></svg>">
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #0a0a0a;
-      --surface: #141414;
-      --surface-elevated: #1a1a1a;
-      --border: #2a2a2a;
-      --text: #e8e8e8;
-      --text-secondary: #888;
-      --text-muted: #555;
+      --bg: #09090b;
+      --surface: #111113;
+      --surface-2: #18181b;
+      --surface-3: #1f1f23;
+      --border: rgba(255,255,255,0.06);
+      --border-2: rgba(255,255,255,0.1);
+      --text: #fafafa;
+      --text-2: #a1a1aa;
+      --text-3: #52525b;
       --primary: #6366f1;
-      --primary-hover: #818cf8;
-      --primary-glow: rgba(99, 102, 241, 0.15);
+      --primary-2: #818cf8;
+      --primary-glow: rgba(99,102,241,0.12);
       --green: #22c55e;
+      --green-glow: rgba(34,197,94,0.1);
       --red: #ef4444;
-      --amber: #f59e0b;
-      --user-bubble: #1e1e2e;
-      --ai-bubble: transparent;
-      --scrollbar: #333;
+      --glass: rgba(255,255,255,0.03);
+      --glass-border: rgba(255,255,255,0.06);
+      --glass-hover: rgba(255,255,255,0.06);
       --radius: 12px;
+      --radius-lg: 16px;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
       height: 100vh;
       overflow: hidden;
     }
 
-    a { color: var(--primary); text-decoration: none; }
-    a:hover { color: var(--primary-hover); }
-
-    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #444; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
 
     /* ===== LAYOUT ===== */
-    .app {
-      display: flex;
-      height: 100vh;
-    }
+    .app { display: flex; height: 100vh; }
 
     /* ===== SIDEBAR ===== */
     .sidebar {
@@ -57,11 +55,11 @@
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      flex-shrink: 0;
+      backdrop-filter: blur(20px);
     }
 
     .sidebar-header {
-      padding: 20px 16px 12px;
+      padding: 20px 16px 16px;
       border-bottom: 1px solid var(--border);
     }
 
@@ -69,58 +67,71 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
 
     .brand-logo {
-      width: 32px;
-      height: 32px;
-      background: var(--primary);
-      border-radius: 8px;
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      border-radius: 7px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 14px;
+      font-size: 11px;
       color: white;
+      box-shadow: 0 0 20px rgba(99,102,241,0.3);
     }
 
     .brand-text {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
+      color: var(--text);
     }
 
     .brand-badge {
-      font-size: 9px;
-      font-weight: 600;
+      font-size: 8px;
+      font-weight: 700;
       color: var(--green);
-      background: rgba(34, 197, 94, 0.1);
-      border: 1px solid rgba(34, 197, 94, 0.2);
+      background: var(--green-glow);
+      border: 1px solid rgba(34,197,94,0.15);
       padding: 2px 8px;
       border-radius: 10px;
-      letter-spacing: 1.5px;
+      letter-spacing: 2px;
       text-transform: uppercase;
+    }
+
+    .brand-sub {
+      font-size: 10px;
+      color: var(--text-3);
+      margin-top: 2px;
+      padding-left: 38px;
     }
 
     .new-chat-btn {
       width: 100%;
-      padding: 10px;
-      background: var(--surface-elevated);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text);
-      font-size: 13px;
+      padding: 10px 12px;
+      background: var(--glass);
+      border: 1px solid var(--border-2);
+      border-radius: 10px;
+      color: var(--text-2);
+      font-size: 12px;
+      font-weight: 500;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-top: 12px;
-      transition: all 0.15s;
+      margin-top: 14px;
+      transition: all 0.2s;
+      font-family: inherit;
     }
 
     .new-chat-btn:hover {
-      background: var(--border);
+      background: var(--glass-hover);
+      color: var(--text);
+      border-color: rgba(255,255,255,0.15);
     }
 
     .sidebar-conversations {
@@ -130,10 +141,10 @@
     }
 
     .conv-item {
-      padding: 10px 12px;
+      padding: 9px 12px;
       border-radius: 8px;
-      font-size: 13px;
-      color: var(--text-secondary);
+      font-size: 12px;
+      color: var(--text-3);
       cursor: pointer;
       transition: all 0.15s;
       white-space: nowrap;
@@ -144,51 +155,51 @@
       justify-content: space-between;
     }
 
-    .conv-item:hover { background: var(--surface-elevated); color: var(--text); }
+    .conv-item:hover { background: var(--glass-hover); color: var(--text-2); }
     .conv-item.active { background: var(--primary-glow); color: var(--text); }
 
     .conv-delete {
       opacity: 0;
       background: none;
       border: none;
-      color: var(--text-muted);
+      color: var(--text-3);
       cursor: pointer;
-      font-size: 16px;
+      font-size: 14px;
       padding: 0 4px;
     }
     .conv-item:hover .conv-delete { opacity: 1; }
 
     .sidebar-footer {
-      padding: 12px 16px;
+      padding: 14px 16px;
       border-top: 1px solid var(--border);
-      font-size: 11px;
-      color: var(--text-muted);
       display: flex;
       align-items: center;
       gap: 6px;
+      font-size: 10px;
+      color: var(--text-3);
     }
 
     .status-dot {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       background: var(--green);
+      box-shadow: 0 0 6px var(--green);
     }
 
-    .status-dot.offline {
-      background: var(--red);
-    }
+    .status-dot.offline { background: var(--red); box-shadow: 0 0 6px var(--red); }
 
-    /* ===== MAIN CONTENT ===== */
+    /* ===== MAIN ===== */
     .main {
       flex: 1;
       display: flex;
       flex-direction: column;
       min-width: 0;
+      background: var(--bg);
     }
 
     .main-header {
-      padding: 16px 24px;
+      padding: 14px 24px;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
@@ -196,86 +207,85 @@
     }
 
     .main-header h2 {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-3);
     }
 
     .privacy-badge {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 11px;
+      font-size: 10px;
+      font-weight: 500;
       color: var(--green);
-      background: rgba(34, 197, 94, 0.08);
-      border: 1px solid rgba(34, 197, 94, 0.15);
+      background: var(--green-glow);
+      border: 1px solid rgba(34,197,94,0.1);
       padding: 4px 12px;
       border-radius: 20px;
+      letter-spacing: 0.3px;
     }
 
     /* ===== MESSAGES ===== */
     .messages {
       flex: 1;
       overflow-y: auto;
-      padding: 24px;
+      padding: 32px 24px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 4px;
     }
 
     .message {
-      max-width: 720px;
+      max-width: 700px;
       width: 100%;
       margin: 0 auto;
-      padding: 4px 0;
+      padding: 6px 0;
     }
 
     .message.user-msg {
-      padding-top: 16px;
+      padding-top: 20px;
     }
 
     .message-role {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
-      color: var(--text-secondary);
-      margin-bottom: 6px;
-      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 8px;
       letter-spacing: 0.5px;
     }
 
-    .message-role.user-role {
-      color: var(--primary);
-    }
+    .message-role.user-role { color: var(--primary-2); }
 
     .message-content {
-      font-size: 14.5px;
-      line-height: 1.75;
-      color: var(--text);
+      font-size: 14px;
+      line-height: 1.8;
+      color: rgba(250,250,250,0.88);
     }
 
+    .message-content strong { color: var(--text); font-weight: 600; }
+
     .message-content pre {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--border-2);
+      border-radius: 10px;
       padding: 16px;
       overflow-x: auto;
-      margin: 8px 0;
-      font-family: 'SF Mono', 'Fira Code', monospace;
+      margin: 12px 0;
+      font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
       font-size: 13px;
+      line-height: 1.5;
     }
 
     .message-content code {
-      background: var(--surface-elevated);
-      padding: 2px 6px;
-      border-radius: 4px;
+      background: var(--surface-3);
+      padding: 2px 7px;
+      border-radius: 5px;
       font-family: 'SF Mono', 'Fira Code', monospace;
       font-size: 13px;
     }
 
-    .message-content pre code {
-      background: none;
-      padding: 0;
-    }
+    .message-content pre code { background: none; padding: 0; }
 
     /* ===== WELCOME ===== */
     .welcome {
@@ -289,100 +299,108 @@
     }
 
     .welcome-logo {
-      width: 64px;
-      height: 64px;
-      background: var(--primary);
-      border-radius: 16px;
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 24px;
+      font-size: 20px;
       color: white;
       margin-bottom: 20px;
+      box-shadow: 0 0 40px rgba(99,102,241,0.25);
     }
 
     .welcome h1 {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 700;
       margin-bottom: 8px;
+      letter-spacing: -0.5px;
     }
 
     .welcome p {
-      color: var(--text-secondary);
-      font-size: 14px;
-      max-width: 400px;
+      color: var(--text-2);
+      font-size: 13px;
+      max-width: 380px;
       line-height: 1.6;
     }
 
     .welcome-features {
       display: flex;
-      gap: 24px;
-      margin-top: 32px;
+      gap: 16px;
+      margin-top: 36px;
     }
 
     .welcome-feature {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: var(--glass);
+      border: 1px solid var(--border-2);
       border-radius: var(--radius);
       padding: 16px 20px;
       text-align: left;
-      width: 180px;
+      width: 160px;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s;
+    }
+
+    .welcome-feature:hover {
+      border-color: rgba(255,255,255,0.15);
+      background: var(--glass-hover);
     }
 
     .welcome-feature h3 {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
-      color: var(--primary);
+      color: var(--primary-2);
       margin-bottom: 4px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
     }
 
-    .welcome-feature p {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
+    .welcome-feature p { font-size: 11px; color: var(--text-3); }
 
     /* ===== INPUT ===== */
     .input-area {
       padding: 16px 24px 24px;
-      border-top: 1px solid var(--border);
     }
 
     .input-wrapper {
-      max-width: 720px;
+      max-width: 700px;
       margin: 0 auto;
       position: relative;
     }
 
     .input-box {
       width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: var(--surface-2);
+      border: 1px solid var(--border-2);
       border-radius: var(--radius);
-      padding: 14px 56px 14px 16px;
+      padding: 14px 52px 14px 16px;
       color: var(--text);
-      font-size: 14px;
+      font-size: 13.5px;
       font-family: inherit;
       resize: none;
       outline: none;
       min-height: 48px;
       max-height: 200px;
-      transition: border-color 0.15s;
+      transition: all 0.2s;
     }
 
-    .input-box:focus { border-color: var(--primary); }
+    .input-box:focus {
+      border-color: rgba(99,102,241,0.4);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.08);
+    }
 
-    .input-box::placeholder { color: var(--text-muted); }
+    .input-box::placeholder { color: var(--text-3); }
 
     .send-btn {
       position: absolute;
-      right: 8px;
-      bottom: 8px;
+      right: 6px;
+      bottom: 6px;
       width: 36px;
       height: 36px;
-      background: var(--primary);
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
       border: none;
       border-radius: 8px;
       color: white;
@@ -390,38 +408,26 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.15s;
+      transition: all 0.2s;
     }
 
-    .send-btn:hover { background: var(--primary-hover); }
-    .send-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .send-btn:hover { transform: scale(1.05); box-shadow: 0 0 16px rgba(99,102,241,0.4); }
+    .send-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; }
+    .send-btn svg { width: 16px; height: 16px; }
 
-    .send-btn svg {
-      width: 18px;
-      height: 18px;
-    }
-
-    /* ===== TYPING INDICATOR ===== */
-    .typing {
-      display: flex;
-      gap: 4px;
-      padding: 8px 0;
-    }
-
+    /* ===== TYPING ===== */
+    .typing { display: flex; gap: 5px; padding: 8px 0; }
     .typing span {
-      width: 6px;
-      height: 6px;
-      background: var(--text-muted);
+      width: 5px; height: 5px;
+      background: var(--primary-2);
       border-radius: 50%;
       animation: bounce 1.4s infinite ease-in-out;
     }
-
     .typing span:nth-child(2) { animation-delay: 0.2s; }
     .typing span:nth-child(3) { animation-delay: 0.4s; }
-
     @keyframes bounce {
-      0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-      40% { transform: scale(1.2); opacity: 1; }
+      0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
+      40% { transform: scale(1.1); opacity: 1; }
     }
 
     /* ===== ONBOARDING ===== */
@@ -437,60 +443,71 @@
 
     .onboarding-card {
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 40px;
-      width: 400px;
+      border: 1px solid var(--border-2);
+      border-radius: var(--radius-lg);
+      padding: 48px 40px;
+      width: 420px;
       text-align: center;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 24px 48px rgba(0,0,0,0.4);
     }
 
     .onboarding-card h1 {
-      font-size: 24px;
-      margin-bottom: 8px;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.3px;
     }
 
     .onboarding-card p {
-      color: var(--text-secondary);
-      font-size: 13px;
-      margin-bottom: 24px;
+      color: var(--text-2);
+      font-size: 12.5px;
+      margin-bottom: 28px;
+      line-height: 1.6;
     }
 
     .onboarding-input {
       width: 100%;
-      padding: 12px 16px;
+      padding: 13px 16px;
       background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      border: 1px solid var(--border-2);
+      border-radius: 10px;
       color: var(--text);
       font-size: 14px;
+      font-family: inherit;
       outline: none;
       margin-bottom: 16px;
+      transition: all 0.2s;
     }
 
-    .onboarding-input:focus { border-color: var(--primary); }
+    .onboarding-input:focus {
+      border-color: rgba(99,102,241,0.4);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.08);
+    }
 
     .onboarding-btn {
       width: 100%;
-      padding: 12px;
-      background: var(--primary);
+      padding: 13px;
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       color: white;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.15s;
+      font-family: inherit;
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
     }
 
-    .onboarding-btn:hover { background: var(--primary-hover); }
+    .onboarding-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(99,102,241,0.3); }
 
-    /* ===== ERROR STATE ===== */
     .error-banner {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.2);
+      background: rgba(239,68,68,0.08);
+      border-bottom: 1px solid rgba(239,68,68,0.15);
       color: var(--red);
-      padding: 12px 20px;
-      font-size: 13px;
+      padding: 10px 20px;
+      font-size: 12px;
       text-align: center;
     }
 
@@ -498,20 +515,17 @@
   </style>
 </head>
 <body>
-  <!-- Onboarding -->
   <div id="onboarding" class="onboarding hidden">
     <div class="onboarding-card">
-      <div class="welcome-logo" style="margin: 0 auto 16px;">JI</div>
-      <h1>Welcome to JCIL Isolate</h1>
-      <p>Your private, offline AI assistant. Enter your name to get started. Everything stays on your device.</p>
-      <input type="text" id="onboard-name" class="onboarding-input" placeholder="Your name" autofocus>
+      <div class="welcome-logo" style="margin: 0 auto 20px;">JI</div>
+      <h1>JCIL Isolate</h1>
+      <p>Your private, offline AI assistant. Everything stays on your device. No cloud. No tracking. No accounts.</p>
+      <input type="text" id="onboard-name" class="onboarding-input" placeholder="Enter your name" autofocus>
       <button id="onboard-btn" class="onboarding-btn">Get Started</button>
     </div>
   </div>
 
-  <!-- Main App -->
   <div id="app" class="app hidden">
-    <!-- Sidebar -->
     <div class="sidebar">
       <div class="sidebar-header">
         <div class="brand">
@@ -519,9 +533,10 @@
           <span class="brand-text">JCIL</span>
           <span class="brand-badge">ISOLATE</span>
         </div>
+        <div class="brand-sub">Private Offline AI</div>
         <button class="new-chat-btn" id="new-chat-btn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          New Chat
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New conversation
         </button>
       </div>
       <div class="sidebar-conversations" id="conv-list"></div>
@@ -531,50 +546,44 @@
       </div>
     </div>
 
-    <!-- Main -->
     <div class="main">
       <div class="main-header">
-        <h2 id="chat-title">New Conversation</h2>
+        <h2 id="chat-title">New conversation</h2>
         <div class="privacy-badge">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          100% Offline — Private
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          100% Offline
         </div>
       </div>
 
-      <div id="error-banner" class="error-banner hidden">
-        Ollama is not running. Please start Ollama to use JCIL Isolate.
-      </div>
+      <div id="error-banner" class="error-banner hidden">Ollama is not running. Start Ollama to use JCIL Isolate.</div>
 
-      <!-- Welcome Screen -->
       <div id="welcome" class="welcome">
         <div class="welcome-logo">JI</div>
         <h1>JCIL Isolate</h1>
-        <p>Your conversations never leave this device. No cloud. No tracking. No accounts. Just you and AI.</p>
+        <p>Your conversations never leave this device. No cloud, no tracking, no accounts. Just you and AI.</p>
         <div class="welcome-features">
           <div class="welcome-feature">
             <h3>Private</h3>
-            <p>Zero data collection. Zero telemetry. Your device only.</p>
+            <p>Zero data leaves your machine. Ever.</p>
           </div>
           <div class="welcome-feature">
             <h3>Offline</h3>
-            <p>Works without internet. Always available.</p>
+            <p>No internet needed. Always ready.</p>
           </div>
           <div class="welcome-feature">
             <h3>Secure</h3>
-            <p>No accounts. No cloud. Nothing to hack.</p>
+            <p>No accounts. Nothing to breach.</p>
           </div>
         </div>
       </div>
 
-      <!-- Messages -->
       <div id="messages" class="messages hidden"></div>
 
-      <!-- Input -->
       <div class="input-area">
         <div class="input-wrapper">
           <textarea id="input" class="input-box" placeholder="Message JCIL Isolate..." rows="1"></textarea>
           <button id="send-btn" class="send-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
       </div>
@@ -582,13 +591,11 @@
   </div>
 
   <script>
-    // ===== STATE =====
     let profile = null;
     let conversations = [];
     let currentConv = null;
     let isGenerating = false;
 
-    // ===== INIT =====
     async function init() {
       profile = await window.api.getProfile();
       if (!profile) {
@@ -599,7 +606,6 @@
       }
     }
 
-    // ===== ONBOARDING =====
     document.getElementById('onboard-btn').addEventListener('click', async () => {
       const name = document.getElementById('onboard-name').value.trim();
       if (!name) return;
@@ -614,7 +620,6 @@
       if (e.key === 'Enter') document.getElementById('onboard-btn').click();
     });
 
-    // ===== APP =====
     async function loadApp() {
       conversations = await window.api.getConversations() || [];
       renderConversations();
@@ -638,7 +643,6 @@
       }
     }
 
-    // ===== CONVERSATIONS =====
     function renderConversations() {
       const list = document.getElementById('conv-list');
       list.innerHTML = '';
@@ -669,32 +673,24 @@
         currentConv = null;
         document.getElementById('welcome').classList.remove('hidden');
         document.getElementById('messages').classList.add('hidden');
-        document.getElementById('chat-title').textContent = 'New Conversation';
-      } else if (currentConv > index) {
-        currentConv--;
-      }
+        document.getElementById('chat-title').textContent = 'New conversation';
+      } else if (currentConv > index) { currentConv--; }
       renderConversations();
     }
 
-    function newChat() {
+    document.getElementById('new-chat-btn').addEventListener('click', () => {
       currentConv = null;
       document.getElementById('welcome').classList.remove('hidden');
       document.getElementById('messages').classList.add('hidden');
-      document.getElementById('chat-title').textContent = 'New Conversation';
+      document.getElementById('chat-title').textContent = 'New conversation';
       renderConversations();
-    }
+    });
 
-    document.getElementById('new-chat-btn').addEventListener('click', newChat);
-
-    // ===== MESSAGES =====
     function renderMessages() {
       const container = document.getElementById('messages');
       container.innerHTML = '';
       if (currentConv === null) return;
-      const msgs = conversations[currentConv].messages || [];
-      msgs.forEach((msg) => {
-        appendMessage(msg.role, msg.content);
-      });
+      (conversations[currentConv].messages || []).forEach(msg => appendMessage(msg.role, msg.content));
       container.scrollTop = container.scrollHeight;
     }
 
@@ -702,14 +698,9 @@
       const container = document.getElementById('messages');
       const div = document.createElement('div');
       div.className = 'message' + (role === 'user' ? ' user-msg' : '');
-
       const label = role === 'user' ? (profile?.name || 'You') : 'JCIL Isolate';
       const roleClass = role === 'user' ? 'user-role' : '';
-
-      div.innerHTML = `
-        <div class="message-role ${roleClass}">${label}</div>
-        <div class="message-content">${formatContent(content)}</div>
-      `;
+      div.innerHTML = `<div class="message-role ${roleClass}">${label}</div><div class="message-content">${formatContent(content)}</div>`;
       container.appendChild(div);
       container.scrollTop = container.scrollHeight;
       return div;
@@ -717,57 +708,44 @@
 
     function formatContent(text) {
       if (!text) return '';
-      // Basic markdown: code blocks, inline code, bold, italic
-      let html = text
+      return text
         .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
         .replace(/`([^`]+)`/g, '<code>$1</code>')
         .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
         .replace(/\*([^*]+)\*/g, '<em>$1</em>')
         .replace(/\n/g, '<br>');
-      return html;
     }
 
-    // ===== SEND =====
     async function sendMessage() {
       const input = document.getElementById('input');
       const text = input.value.trim();
       if (!text || isGenerating) return;
 
-      // Create new conversation if needed
       if (currentConv === null) {
-        conversations.unshift({
-          title: text.substring(0, 40),
-          messages: [],
-          createdAt: new Date().toISOString(),
-        });
+        conversations.unshift({ title: text.substring(0, 40), messages: [], createdAt: new Date().toISOString() });
         currentConv = 0;
         document.getElementById('welcome').classList.add('hidden');
         document.getElementById('messages').classList.remove('hidden');
         renderConversations();
       }
 
-      // Add user message
       conversations[currentConv].messages.push({ role: 'user', content: text });
       appendMessage('user', text);
       input.value = '';
       input.style.height = '48px';
 
-      // Show typing indicator
       isGenerating = true;
       document.getElementById('send-btn').disabled = true;
       const typingDiv = appendMessage('assistant', '');
       const contentEl = typingDiv.querySelector('.message-content');
       contentEl.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
 
-      // Stream response
       let fullResponse = '';
       window.api.removeTokenListener();
       window.api.removeDoneListener();
 
       window.api.onToken((token) => {
-        if (contentEl.querySelector('.typing')) {
-          contentEl.innerHTML = '';
-        }
+        if (contentEl.querySelector('.typing')) contentEl.innerHTML = '';
         fullResponse += token;
         contentEl.innerHTML = formatContent(fullResponse);
         document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
@@ -778,7 +756,6 @@
         window.api.saveConversations(conversations);
         isGenerating = false;
         document.getElementById('send-btn').disabled = false;
-        // Update title if first message
         if (conversations[currentConv].messages.length === 2) {
           document.getElementById('chat-title').textContent = conversations[currentConv].title;
         }
@@ -793,26 +770,15 @@
       }
     }
 
-    // ===== INPUT HANDLING =====
-    const input = document.getElementById('input');
-    const sendBtn = document.getElementById('send-btn');
-
-    sendBtn.addEventListener('click', sendMessage);
-
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
+    document.getElementById('send-btn').addEventListener('click', sendMessage);
+    document.getElementById('input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+    document.getElementById('input').addEventListener('input', function() {
+      this.style.height = '48px';
+      this.style.height = Math.min(this.scrollHeight, 200) + 'px';
     });
 
-    // Auto-resize textarea
-    input.addEventListener('input', () => {
-      input.style.height = '48px';
-      input.style.height = Math.min(input.scrollHeight, 200) + 'px';
-    });
-
-    // ===== START =====
     init();
   </script>
 </body>
