@@ -64,7 +64,7 @@ function createWindow() {
     height: 800,
     minWidth: 800,
     minHeight: 600,
-    titleBarStyle: 'hiddenInset',
+    title: 'JCIL Isolate',
     backgroundColor: '#0a0a0a',
     webPreferences: {
       nodeIntegration: false,
