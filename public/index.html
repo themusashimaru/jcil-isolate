@@ -790,10 +790,24 @@
       try{
         const msgs=conversations[currentConv].messages.filter(m=>m.role!=='system');
         const lang=profile?.language||'English';
-        // Always inject current language as system message — picks up mid-conversation switches
-        msgs.unshift({role:'system',content:lang==='English'
-          ?'Respond in English.'
-          :`CRITICAL: You MUST respond ONLY in ${lang}. Every word of your response must be in ${lang}. Do not use English unless quoting Scripture references (e.g. John 3:16). Keep all values and personality identical.`});
+
+        // Bible RAG — search for relevant verses based on the user's message
+        const lastUserMsg = conversations[currentConv].messages.filter(m=>m.role==='user').pop();
+        let bibleContext = '';
+        if (lastUserMsg) {
+          const verses = await window.api.searchBible(lastUserMsg.content);
+          if (verses && verses.length > 0) {
+            bibleContext = '\n\nRELEVANT SCRIPTURE (use these to support your response, cite them accurately):\n' +
+              verses.map(v => `${v.ref}: "${v.text}"`).join('\n');
+          }
+        }
+
+        // Language + Bible context
+        const langInstruction = lang==='English'
+          ? 'Respond in English.'
+          : `CRITICAL: You MUST respond ONLY in ${lang}. Every word of your response must be in ${lang}. Do not use English unless quoting Scripture references. Keep all values and personality identical.`;
+
+        msgs.unshift({role:'system', content: langInstruction + bibleContext});
         await window.api.chatStream(msgs);
       }
       catch(err){ce.innerHTML=`<span style="color:var(--red)">Error: ${err}</span>`;isGenerating=false;document.getElementById('send-btn').disabled=false;}

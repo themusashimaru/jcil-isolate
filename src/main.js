@@ -143,6 +143,75 @@ ipcMain.handle('chat', async (event, messages) => {
   });
 });
 
+// ===== BIBLE RAG =====
+let bibleVerses = null;
+let bibleTopics = null;
+
+function loadBible() {
+  if (bibleVerses) return;
+  try {
+    const biblePath = path.join(__dirname, '..', 'public', 'bible.json');
+    const topicsPath = path.join(__dirname, '..', 'public', 'bible_topics.json');
+    bibleVerses = JSON.parse(fs.readFileSync(biblePath, 'utf8'));
+    bibleTopics = JSON.parse(fs.readFileSync(topicsPath, 'utf8'));
+    console.log(`Bible loaded: ${bibleVerses.length} verses, ${Object.keys(bibleTopics).length} topics`);
+  } catch (e) {
+    console.error('Failed to load Bible:', e.message);
+  }
+}
+
+function findRelevantVerses(query) {
+  loadBible();
+  if (!bibleVerses || !bibleTopics) return [];
+
+  const q = query.toLowerCase();
+  let refs = [];
+
+  // Check topical index first
+  for (const [topic, topicRefs] of Object.entries(bibleTopics)) {
+    if (q.includes(topic)) {
+      refs.push(...topicRefs);
+    }
+  }
+
+  // Also do keyword search in verse text if no topic match
+  if (refs.length === 0) {
+    const keywords = q.split(/\s+/).filter(w => w.length > 3);
+    const scored = {};
+    for (const verse of bibleVerses) {
+      const text = verse.text.toLowerCase();
+      let score = 0;
+      for (const kw of keywords) {
+        if (text.includes(kw)) score++;
+      }
+      if (score > 0) {
+        scored[verse.ref] = { score, text: verse.text, ref: verse.ref };
+      }
+    }
+    refs = Object.values(scored).sort((a, b) => b.score - a.score).slice(0, 8).map(v => v.ref);
+  }
+
+  // Dedupe and limit
+  refs = [...new Set(refs)].slice(0, 10);
+
+  // Resolve refs to full text
+  const results = [];
+  for (const ref of refs) {
+    // Handle range refs like "Ephesians 2:8-9"
+    const baseRef = ref.split('-')[0];
+    const verse = bibleVerses.find(v => v.ref === baseRef);
+    if (verse) {
+      results.push({ ref, text: verse.text });
+    }
+  }
+
+  return results;
+}
+
+ipcMain.handle('search-bible', (_, query) => {
+  return findRelevantVerses(query);
+});
+
 ipcMain.handle('get-language', () => {
   const profile = getUserProfile();
   return profile?.language || 'English';

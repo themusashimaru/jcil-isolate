@@ -12,6 +12,7 @@ contextBridge.exposeInMainWorld('api', {
   onChatDone: (callback) => ipcRenderer.on('chat-done', () => callback()),
   removeTokenListener: () => ipcRenderer.removeAllListeners('chat-token'),
   removeDoneListener: () => ipcRenderer.removeAllListeners('chat-done'),
+  searchBible: (query) => ipcRenderer.invoke('search-bible', query),
   getLanguage: () => ipcRenderer.invoke('get-language'),
   checkSetup: () => ipcRenderer.invoke('check-setup'),
   installModel: () => ipcRenderer.invoke('install-model'),
