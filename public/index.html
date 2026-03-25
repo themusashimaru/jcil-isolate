@@ -227,37 +227,29 @@
       max-width: 720px;
       width: 100%;
       margin: 0 auto;
-      display: flex;
-      gap: 12px;
+      padding: 4px 0;
     }
 
-    .message-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .message.user-msg {
+      padding-top: 16px;
+    }
+
+    .message-role {
       font-size: 12px;
-      font-weight: 700;
-      flex-shrink: 0;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    .message-avatar.user {
-      background: var(--primary);
-      color: white;
-    }
-
-    .message-avatar.ai {
-      background: var(--surface-elevated);
-      border: 1px solid var(--border);
+    .message-role.user-role {
       color: var(--primary);
     }
 
     .message-content {
-      flex: 1;
-      font-size: 14px;
-      line-height: 1.7;
+      font-size: 14.5px;
+      line-height: 1.75;
       color: var(--text);
     }
 
@@ -709,13 +701,13 @@
     function appendMessage(role, content) {
       const container = document.getElementById('messages');
       const div = document.createElement('div');
-      div.className = 'message';
+      div.className = 'message' + (role === 'user' ? ' user-msg' : '');
 
-      const initials = role === 'user' ? (profile?.name?.[0] || 'U') : 'JI';
-      const avatarClass = role === 'user' ? 'user' : 'ai';
+      const label = role === 'user' ? (profile?.name || 'You') : 'JCIL Isolate';
+      const roleClass = role === 'user' ? 'user-role' : '';
 
       div.innerHTML = `
-        <div class="message-avatar ${avatarClass}">${initials}</div>
+        <div class="message-role ${roleClass}">${label}</div>
         <div class="message-content">${formatContent(content)}</div>
       `;
       container.appendChild(div);
