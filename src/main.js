@@ -143,6 +143,11 @@ ipcMain.handle('chat', async (event, messages) => {
   });
 });
 
+ipcMain.handle('get-language', () => {
+  const profile = getUserProfile();
+  return profile?.language || 'English';
+});
+
 ipcMain.handle('chat-stream', async (event, messages) => {
   return new Promise((resolve, reject) => {
     const postData = JSON.stringify({

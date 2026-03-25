@@ -587,6 +587,20 @@
       <h1>JCIL Isolate</h1>
       <p>Your private, offline AI assistant. Everything stays on your device. No cloud. No tracking.</p>
       <input type="text" id="onboard-name" class="onboarding-input" placeholder="Enter your name" autofocus>
+      <select id="onboard-lang" class="onboarding-input" style="appearance:auto; cursor:pointer;">
+        <option value="English">English</option>
+        <option value="Spanish">Espa&#241;ol</option>
+        <option value="French">Fran&#231;ais</option>
+        <option value="Portuguese">Portugu&#234;s</option>
+        <option value="German">Deutsch</option>
+        <option value="Italian">Italiano</option>
+        <option value="Chinese">&#20013;&#25991;</option>
+        <option value="Korean">&#54620;&#44397;&#50612;</option>
+        <option value="Japanese">&#26085;&#26412;&#35486;</option>
+        <option value="Arabic">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</option>
+        <option value="Russian">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</option>
+        <option value="Hindi">&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;</option>
+      </select>
       <button id="onboard-btn" class="onboarding-btn">Get Started</button>
     </div>
   </div>
@@ -606,6 +620,22 @@
         </button>
       </div>
       <div class="sidebar-conversations" id="conv-list"></div>
+      <div style="padding: 8px 18px; border-top: 1px solid var(--glass-border);">
+        <select id="lang-switcher" style="width:100%; padding:6px 8px; background:var(--surface-2); border:1px solid var(--glass-border); border-radius:6px; color:var(--text-2); font-size:11px; font-family:inherit; cursor:pointer; outline:none;">
+          <option value="English">English</option>
+          <option value="Spanish">Espa&#241;ol</option>
+          <option value="French">Fran&#231;ais</option>
+          <option value="Portuguese">Portugu&#234;s</option>
+          <option value="German">Deutsch</option>
+          <option value="Italian">Italiano</option>
+          <option value="Chinese">&#20013;&#25991;</option>
+          <option value="Korean">&#54620;&#44397;&#50612;</option>
+          <option value="Japanese">&#26085;&#26412;&#35486;</option>
+          <option value="Arabic">&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</option>
+          <option value="Russian">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</option>
+          <option value="Hindi">&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;</option>
+        </select>
+      </div>
       <div class="sidebar-footer">
         <span class="status-dot" id="status-dot"></span>
         <span id="status-text">Checking...</span>
@@ -690,12 +720,18 @@
 
     document.getElementById('onboard-btn').addEventListener('click',async()=>{
       const name=document.getElementById('onboard-name').value.trim();if(!name)return;
-      profile={name,createdAt:new Date().toISOString()};await window.api.saveProfile(profile);
+      const lang=document.getElementById('onboard-lang').value;
+      profile={name,language:lang,createdAt:new Date().toISOString()};await window.api.saveProfile(profile);
       document.getElementById('onboarding').classList.add('hidden');document.getElementById('app').classList.remove('hidden');await loadApp();
     });
     document.getElementById('onboard-name').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('onboard-btn').click();});
 
-    async function loadApp(){conversations=await window.api.getConversations()||[];renderConversations();checkStatus();setInterval(checkStatus,30000);}
+    async function loadApp(){
+      conversations=await window.api.getConversations()||[];renderConversations();checkStatus();setInterval(checkStatus,30000);
+      const sw=document.getElementById('lang-switcher');
+      if(profile?.language)sw.value=profile.language;
+      sw.addEventListener('change',async()=>{profile.language=sw.value;await window.api.saveProfile(profile);});
+    }
 
     async function checkStatus(){
       const ok=await window.api.checkOllama();const d=document.getElementById('status-dot'),t=document.getElementById('status-text'),b=document.getElementById('error-banner');
@@ -751,7 +787,12 @@
       let full='';window.api.removeTokenListener();window.api.removeDoneListener();
       window.api.onToken(tk=>{if(ce.querySelector('.typing'))ce.innerHTML='';full+=tk;ce.innerHTML=formatContent(full);document.getElementById('messages').scrollTop=document.getElementById('messages').scrollHeight;});
       window.api.onChatDone(()=>{conversations[currentConv].messages.push({role:'assistant',content:full});window.api.saveConversations(conversations);isGenerating=false;document.getElementById('send-btn').disabled=false;if(conversations[currentConv].messages.length===2)document.getElementById('chat-title').textContent=conversations[currentConv].title;});
-      try{await window.api.chatStream(conversations[currentConv].messages.filter(m=>m.role!=='system'));}
+      try{
+        const msgs=conversations[currentConv].messages.filter(m=>m.role!=='system');
+        const lang=profile?.language||'English';
+        if(lang!=='English'){msgs.unshift({role:'system',content:`IMPORTANT: You MUST respond in ${lang}. All your responses must be in ${lang}. Keep the same values, personality, and behavior — just respond in ${lang}.`});}
+        await window.api.chatStream(msgs);
+      }
       catch(err){ce.innerHTML=`<span style="color:var(--red)">Error: ${err}</span>`;isGenerating=false;document.getElementById('send-btn').disabled=false;}
     }
 
