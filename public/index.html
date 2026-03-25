@@ -87,8 +87,10 @@
     .brand-text {
       font-size: 15px;
       font-weight: 700;
-      letter-spacing: 1.5px;
-      color: var(--text);
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, var(--text), var(--primary-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .brand-badge {
@@ -107,7 +109,6 @@
       font-size: 10px;
       color: var(--text-3);
       margin-top: 2px;
-      padding-left: 38px;
     }
 
     .new-chat-btn {
@@ -314,10 +315,13 @@
     }
 
     .welcome h1 {
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 700;
       margin-bottom: 8px;
       letter-spacing: -0.5px;
+      background: linear-gradient(135deg, var(--text), var(--primary-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .welcome p {
@@ -453,10 +457,13 @@
     }
 
     .onboarding-card h1 {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 700;
       margin-bottom: 6px;
       letter-spacing: -0.3px;
+      background: linear-gradient(135deg, var(--text), var(--primary-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .onboarding-card p {
@@ -517,8 +524,7 @@
 <body>
   <div id="onboarding" class="onboarding hidden">
     <div class="onboarding-card">
-      <div class="welcome-logo" style="margin: 0 auto 20px;">JI</div>
-      <h1>JCIL Isolate</h1>
+      <h1 style="margin-bottom: 6px;">JCIL Isolate</h1>
       <p>Your private, offline AI assistant. Everything stays on your device. No cloud. No tracking. No accounts.</p>
       <input type="text" id="onboard-name" class="onboarding-input" placeholder="Enter your name" autofocus>
       <button id="onboard-btn" class="onboarding-btn">Get Started</button>
@@ -529,7 +535,6 @@
     <div class="sidebar">
       <div class="sidebar-header">
         <div class="brand">
-          <div class="brand-logo">JI</div>
           <span class="brand-text">JCIL</span>
           <span class="brand-badge">ISOLATE</span>
         </div>
@@ -558,7 +563,6 @@
       <div id="error-banner" class="error-banner hidden">Ollama is not running. Start Ollama to use JCIL Isolate.</div>
 
       <div id="welcome" class="welcome">
-        <div class="welcome-logo">JI</div>
         <h1>JCIL Isolate</h1>
         <p>Your conversations never leave this device. No cloud, no tracking, no accounts. Just you and AI.</p>
         <div class="welcome-features">
