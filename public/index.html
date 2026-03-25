@@ -5,90 +5,94 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JCIL Isolate</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%236366f1'/><text x='50%25' y='55%25' font-family='Arial' font-size='14' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='middle'>JI</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #09090b;
-      --surface: #111113;
-      --surface-2: #18181b;
-      --surface-3: #1f1f23;
-      --border: rgba(255,255,255,0.06);
-      --border-2: rgba(255,255,255,0.1);
-      --text: #fafafa;
-      --text-2: #a1a1aa;
-      --text-3: #52525b;
+      --bg: #06060a;
+      --surface: rgba(255,255,255,0.03);
+      --surface-2: rgba(255,255,255,0.05);
+      --surface-3: rgba(255,255,255,0.08);
+      --glass: rgba(15,15,25,0.7);
+      --glass-border: rgba(255,255,255,0.08);
+      --glass-border-hover: rgba(255,255,255,0.14);
+      --text: #f0f0f5;
+      --text-2: #8888a0;
+      --text-3: #4a4a60;
       --primary: #6366f1;
       --primary-2: #818cf8;
-      --primary-glow: rgba(99,102,241,0.12);
-      --green: #22c55e;
-      --green-glow: rgba(34,197,94,0.1);
-      --red: #ef4444;
-      --glass: rgba(255,255,255,0.03);
-      --glass-border: rgba(255,255,255,0.06);
-      --glass-hover: rgba(255,255,255,0.06);
-      --radius: 12px;
-      --radius-lg: 16px;
+      --primary-3: #a5b4fc;
+      --primary-glow: rgba(99,102,241,0.15);
+      --primary-glow-strong: rgba(99,102,241,0.25);
+      --green: #34d399;
+      --green-dim: rgba(52,211,153,0.12);
+      --red: #f87171;
+      --purple: #a78bfa;
+      --gradient: linear-gradient(135deg, #6366f1, #8b5cf6, #a78bfa);
+      --radius: 14px;
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      font-family: 'Inter', -apple-system, system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
       height: 100vh;
       overflow: hidden;
     }
 
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+    /* Background */
+    .bg-texture {
+      position: fixed;
+      inset: 0;
+      background: url('bg-texture.jpg') center/cover no-repeat;
+      opacity: 0.3;
+      z-index: 0;
+      pointer-events: none;
+    }
 
-    /* ===== LAYOUT ===== */
-    .app { display: flex; height: 100vh; }
+    .bg-gradient {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 20% 50%, rgba(99,102,241,0.08) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.05) 0%, transparent 50%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+    .app { display: flex; height: 100vh; position: relative; z-index: 1; }
 
     /* ===== SIDEBAR ===== */
     .sidebar {
       width: 260px;
-      background: var(--surface);
-      border-right: 1px solid var(--border);
+      background: var(--glass);
+      backdrop-filter: blur(40px) saturate(150%);
+      -webkit-backdrop-filter: blur(40px) saturate(150%);
+      border-right: 1px solid var(--glass-border);
       display: flex;
       flex-direction: column;
-      backdrop-filter: blur(20px);
     }
 
     .sidebar-header {
-      padding: 20px 16px 16px;
-      border-bottom: 1px solid var(--border);
+      padding: 22px 18px 18px;
+      border-bottom: 1px solid var(--glass-border);
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 4px;
-    }
-
-    .brand-logo {
-      width: 28px;
-      height: 28px;
-      background: linear-gradient(135deg, var(--primary), #8b5cf6);
-      border-radius: 7px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 11px;
-      color: white;
-      box-shadow: 0 0 20px rgba(99,102,241,0.3);
     }
 
     .brand-text {
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      background: linear-gradient(135deg, var(--text), var(--primary-2));
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      background: var(--gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -97,25 +101,25 @@
       font-size: 8px;
       font-weight: 700;
       color: var(--green);
-      background: var(--green-glow);
-      border: 1px solid rgba(34,197,94,0.15);
-      padding: 2px 8px;
-      border-radius: 10px;
+      background: var(--green-dim);
+      border: 1px solid rgba(52,211,153,0.15);
+      padding: 3px 9px;
+      border-radius: 20px;
       letter-spacing: 2px;
-      text-transform: uppercase;
     }
 
     .brand-sub {
       font-size: 10px;
       color: var(--text-3);
-      margin-top: 2px;
+      margin-top: 4px;
+      letter-spacing: 0.5px;
     }
 
     .new-chat-btn {
       width: 100%;
-      padding: 10px 12px;
-      background: var(--glass);
-      border: 1px solid var(--border-2);
+      padding: 11px 14px;
+      background: var(--surface-2);
+      border: 1px solid var(--glass-border);
       border-radius: 10px;
       color: var(--text-2);
       font-size: 12px;
@@ -124,15 +128,17 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-top: 14px;
-      transition: all 0.2s;
+      margin-top: 16px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       font-family: inherit;
+      backdrop-filter: blur(10px);
     }
 
     .new-chat-btn:hover {
-      background: var(--glass-hover);
+      background: var(--surface-3);
       color: var(--text);
-      border-color: rgba(255,255,255,0.15);
+      border-color: var(--glass-border-hover);
+      box-shadow: 0 0 20px rgba(99,102,241,0.05);
     }
 
     .sidebar-conversations {
@@ -142,12 +148,12 @@
     }
 
     .conv-item {
-      padding: 9px 12px;
+      padding: 10px 12px;
       border-radius: 8px;
       font-size: 12px;
       color: var(--text-3);
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all 0.2s;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -156,8 +162,12 @@
       justify-content: space-between;
     }
 
-    .conv-item:hover { background: var(--glass-hover); color: var(--text-2); }
-    .conv-item.active { background: var(--primary-glow); color: var(--text); }
+    .conv-item:hover { background: var(--surface-2); color: var(--text-2); }
+    .conv-item.active {
+      background: var(--primary-glow);
+      color: var(--text);
+      border: 1px solid rgba(99,102,241,0.15);
+    }
 
     .conv-delete {
       opacity: 0;
@@ -166,29 +176,29 @@
       color: var(--text-3);
       cursor: pointer;
       font-size: 14px;
-      padding: 0 4px;
     }
-    .conv-item:hover .conv-delete { opacity: 1; }
+    .conv-item:hover .conv-delete { opacity: 0.6; }
 
     .sidebar-footer {
-      padding: 14px 16px;
-      border-top: 1px solid var(--border);
+      padding: 14px 18px;
+      border-top: 1px solid var(--glass-border);
       display: flex;
       align-items: center;
       gap: 6px;
       font-size: 10px;
       color: var(--text-3);
+      letter-spacing: 0.3px;
     }
 
     .status-dot {
-      width: 5px;
-      height: 5px;
+      width: 5px; height: 5px;
       border-radius: 50%;
       background: var(--green);
-      box-shadow: 0 0 6px var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 3s ease-in-out infinite;
     }
-
-    .status-dot.offline { background: var(--red); box-shadow: 0 0 6px var(--red); }
+    .status-dot.offline { background: var(--red); box-shadow: 0 0 8px var(--red); }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
 
     /* ===== MAIN ===== */
     .main {
@@ -196,21 +206,24 @@
       display: flex;
       flex-direction: column;
       min-width: 0;
-      background: var(--bg);
     }
 
     .main-header {
-      padding: 14px 24px;
-      border-bottom: 1px solid var(--border);
+      padding: 14px 28px;
+      border-bottom: 1px solid var(--glass-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      background: var(--glass);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
     }
 
     .main-header h2 {
       font-size: 13px;
       font-weight: 500;
       color: var(--text-3);
+      letter-spacing: 0.3px;
     }
 
     .privacy-badge {
@@ -218,20 +231,20 @@
       align-items: center;
       gap: 6px;
       font-size: 10px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--green);
-      background: var(--green-glow);
-      border: 1px solid rgba(34,197,94,0.1);
-      padding: 4px 12px;
+      background: var(--green-dim);
+      border: 1px solid rgba(52,211,153,0.1);
+      padding: 5px 14px;
       border-radius: 20px;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.5px;
     }
 
     /* ===== MESSAGES ===== */
     .messages {
       flex: 1;
       overflow-y: auto;
-      padding: 32px 24px;
+      padding: 32px 28px;
       display: flex;
       flex-direction: column;
       gap: 4px;
@@ -244,46 +257,46 @@
       padding: 6px 0;
     }
 
-    .message.user-msg {
-      padding-top: 20px;
-    }
+    .message.user-msg { padding-top: 24px; }
 
     .message-role {
-      font-size: 11px;
-      font-weight: 600;
+      font-size: 10px;
+      font-weight: 700;
       color: var(--text-3);
       margin-bottom: 8px;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
     .message-role.user-role { color: var(--primary-2); }
 
     .message-content {
-      font-size: 14px;
+      font-size: 14.5px;
       line-height: 1.8;
-      color: rgba(250,250,250,0.88);
+      color: rgba(240,240,245,0.9);
     }
 
-    .message-content strong { color: var(--text); font-weight: 600; }
+    .message-content strong { color: var(--text); }
 
     .message-content pre {
-      background: var(--surface-2);
-      border: 1px solid var(--border-2);
-      border-radius: 10px;
-      padding: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 18px;
       overflow-x: auto;
       margin: 12px 0;
-      font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+      font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
       font-size: 13px;
-      line-height: 1.5;
+      line-height: 1.6;
+      backdrop-filter: blur(10px);
     }
 
     .message-content code {
       background: var(--surface-3);
       padding: 2px 7px;
       border-radius: 5px;
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 13px;
+      font-family: 'JetBrains Mono', 'SF Mono', monospace;
+      font-size: 12.5px;
     }
 
     .message-content pre code { background: none; padding: 0; }
@@ -300,26 +313,19 @@
     }
 
     .welcome-logo {
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, var(--primary), #8b5cf6);
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 20px;
-      color: white;
-      margin-bottom: 20px;
-      box-shadow: 0 0 40px rgba(99,102,241,0.25);
+      width: 100px;
+      height: auto;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 0 60px rgba(99,102,241,0.2);
     }
 
     .welcome h1 {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 10px;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, var(--text), var(--primary-2));
+      background: var(--gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -328,45 +334,48 @@
       color: var(--text-2);
       font-size: 13px;
       max-width: 380px;
-      line-height: 1.6;
+      line-height: 1.7;
     }
 
     .welcome-features {
       display: flex;
-      gap: 16px;
-      margin-top: 36px;
+      gap: 14px;
+      margin-top: 40px;
     }
 
     .welcome-feature {
       background: var(--glass);
-      border: 1px solid var(--border-2);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius);
-      padding: 16px 20px;
+      padding: 18px 22px;
       text-align: left;
       width: 160px;
-      backdrop-filter: blur(10px);
-      transition: all 0.2s;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .welcome-feature:hover {
-      border-color: rgba(255,255,255,0.15);
-      background: var(--glass-hover);
+      border-color: var(--glass-border-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
     }
 
     .welcome-feature h3 {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--primary-2);
-      margin-bottom: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--primary-3);
+      margin-bottom: 6px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      letter-spacing: 1px;
     }
 
-    .welcome-feature p { font-size: 11px; color: var(--text-3); }
+    .welcome-feature p { font-size: 11px; color: var(--text-3); line-height: 1.5; }
 
     /* ===== INPUT ===== */
     .input-area {
-      padding: 16px 24px 24px;
+      padding: 16px 28px 28px;
+      background: linear-gradient(to top, rgba(6,6,10,0.9), transparent);
     }
 
     .input-wrapper {
@@ -377,49 +386,52 @@
 
     .input-box {
       width: 100%;
-      background: var(--surface-2);
-      border: 1px solid var(--border-2);
+      background: var(--glass);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius);
-      padding: 14px 52px 14px 16px;
+      padding: 16px 56px 16px 18px;
       color: var(--text);
-      font-size: 13.5px;
+      font-size: 14px;
       font-family: inherit;
       resize: none;
       outline: none;
-      min-height: 48px;
+      min-height: 52px;
       max-height: 200px;
-      transition: all 0.2s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .input-box:focus {
-      border-color: rgba(99,102,241,0.4);
-      box-shadow: 0 0 0 3px rgba(99,102,241,0.08);
+      border-color: rgba(99,102,241,0.3);
+      box-shadow: 0 0 0 4px rgba(99,102,241,0.06), 0 0 30px rgba(99,102,241,0.08);
     }
 
     .input-box::placeholder { color: var(--text-3); }
 
     .send-btn {
       position: absolute;
-      right: 6px;
-      bottom: 6px;
-      width: 36px;
-      height: 36px;
-      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      right: 8px;
+      bottom: 8px;
+      width: 38px;
+      height: 38px;
+      background: var(--gradient);
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       color: white;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s;
+      transition: all 0.25s;
+      box-shadow: 0 0 20px rgba(99,102,241,0.2);
     }
 
-    .send-btn:hover { transform: scale(1.05); box-shadow: 0 0 16px rgba(99,102,241,0.4); }
-    .send-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; }
+    .send-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(99,102,241,0.35); }
+    .send-btn:disabled { opacity: 0.25; cursor: not-allowed; transform: none; box-shadow: none; }
     .send-btn svg { width: 16px; height: 16px; }
 
-    /* ===== TYPING ===== */
+    /* Typing */
     .typing { display: flex; gap: 5px; padding: 8px 0; }
     .typing span {
       width: 5px; height: 5px;
@@ -430,8 +442,8 @@
     .typing span:nth-child(2) { animation-delay: 0.2s; }
     .typing span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes bounce {
-      0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
-      40% { transform: scale(1.1); opacity: 1; }
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.3; }
+      40% { transform: scale(1.2); opacity: 1; }
     }
 
     /* ===== ONBOARDING ===== */
@@ -446,22 +458,30 @@
     }
 
     .onboarding-card {
-      background: var(--surface);
-      border: 1px solid var(--border-2);
-      border-radius: var(--radius-lg);
-      padding: 48px 40px;
-      width: 420px;
+      background: var(--glass);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 48px 44px;
+      width: 440px;
       text-align: center;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 24px 48px rgba(0,0,0,0.4);
+      box-shadow: 0 32px 64px rgba(0,0,0,0.5), 0 0 80px rgba(99,102,241,0.05);
+    }
+
+    .onboarding-logo {
+      width: 80px;
+      height: auto;
+      border-radius: 16px;
+      margin: 0 auto 24px;
+      box-shadow: 0 0 40px rgba(99,102,241,0.25);
     }
 
     .onboarding-card h1 {
-      font-size: 24px;
-      font-weight: 700;
+      font-size: 26px;
+      font-weight: 800;
       margin-bottom: 6px;
-      letter-spacing: -0.3px;
-      background: linear-gradient(135deg, var(--text), var(--primary-2));
+      background: var(--gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -469,94 +489,56 @@
     .onboarding-card p {
       color: var(--text-2);
       font-size: 12.5px;
-      margin-bottom: 28px;
-      line-height: 1.6;
+      margin-bottom: 32px;
+      line-height: 1.7;
     }
 
     .onboarding-input {
       width: 100%;
-      padding: 13px 16px;
-      background: var(--bg);
-      border: 1px solid var(--border-2);
-      border-radius: 10px;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
       color: var(--text);
       font-size: 14px;
       font-family: inherit;
       outline: none;
       margin-bottom: 16px;
-      transition: all 0.2s;
+      transition: all 0.3s;
     }
 
     .onboarding-input:focus {
-      border-color: rgba(99,102,241,0.4);
-      box-shadow: 0 0 0 3px rgba(99,102,241,0.08);
+      border-color: rgba(99,102,241,0.3);
+      box-shadow: 0 0 0 4px rgba(99,102,241,0.06);
     }
 
     .onboarding-btn {
       width: 100%;
-      padding: 13px;
-      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      padding: 14px;
+      background: var(--gradient);
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       color: white;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       font-family: inherit;
-      transition: all 0.2s;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.5px;
+      transition: all 0.3s;
+      box-shadow: 0 0 30px rgba(99,102,241,0.2);
     }
 
-    .onboarding-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(99,102,241,0.3); }
+    .onboarding-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 40px rgba(99,102,241,0.35); }
 
-    .error-banner {
-      background: rgba(239,68,68,0.08);
-      border-bottom: 1px solid rgba(239,68,68,0.15);
-      color: var(--red);
-      padding: 10px 20px;
-      font-size: 12px;
-      text-align: center;
-    }
-
-    .hidden { display: none !important; }
-  </style>
-</head>
-<body>
-  <!-- Setup Wizard -->
-  <div id="setup" class="onboarding hidden">
-    <div class="onboarding-card">
-      <h1 style="margin-bottom: 6px;">JCIL Isolate</h1>
-      <p id="setup-status" style="margin-bottom: 20px;">Checking your system...</p>
-
-      <div id="setup-steps" style="text-align: left; margin-bottom: 24px;">
-        <div id="step-ollama" class="setup-step">
-          <span class="step-icon" id="step-ollama-icon">&#9675;</span>
-          <span>Ollama installed</span>
-        </div>
-        <div id="step-running" class="setup-step">
-          <span class="step-icon" id="step-running-icon">&#9675;</span>
-          <span>Ollama running</span>
-        </div>
-        <div id="step-model" class="setup-step">
-          <span class="step-icon" id="step-model-icon">&#9675;</span>
-          <span>JCIL Isolate model ready</span>
-        </div>
-      </div>
-
-      <button id="setup-action-btn" class="onboarding-btn hidden" style="margin-bottom: 10px;">Download Ollama</button>
-      <button id="setup-retry-btn" class="onboarding-btn" style="background: var(--surface-3); margin-bottom: 0;">Retry</button>
-    </div>
-  </div>
-
-  <style>
+    /* Setup */
     .setup-step {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 0;
+      gap: 12px;
+      padding: 12px 0;
       font-size: 13px;
       color: var(--text-2);
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--glass-border);
     }
     .setup-step:last-child { border-bottom: none; }
     .step-icon { font-size: 16px; width: 20px; text-align: center; }
@@ -564,17 +546,52 @@
     .step-icon.fail { color: var(--red); }
     .step-icon.loading { color: var(--primary-2); animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
 
+    .error-banner {
+      background: rgba(248,113,113,0.06);
+      border-bottom: 1px solid rgba(248,113,113,0.1);
+      color: var(--red);
+      padding: 10px 20px;
+      font-size: 12px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="bg-texture"></div>
+  <div class="bg-gradient"></div>
+
+  <!-- Setup -->
+  <div id="setup" class="onboarding hidden">
+    <div class="onboarding-card">
+      <img src="logo.jpg" class="onboarding-logo" alt="JCIL Isolate">
+      <h1>JCIL Isolate</h1>
+      <p id="setup-status">Checking your system...</p>
+      <div id="setup-steps" style="text-align: left; margin-bottom: 24px;">
+        <div class="setup-step"><span class="step-icon" id="step-ollama-icon">&#9675;</span><span>Ollama installed</span></div>
+        <div class="setup-step"><span class="step-icon" id="step-running-icon">&#9675;</span><span>Ollama running</span></div>
+        <div class="setup-step"><span class="step-icon" id="step-model-icon">&#9675;</span><span>JCIL Isolate model ready</span></div>
+      </div>
+      <button id="setup-action-btn" class="onboarding-btn hidden" style="margin-bottom: 10px;">Download Ollama</button>
+      <button id="setup-retry-btn" class="onboarding-btn" style="background: var(--surface-3); box-shadow: none;">Retry</button>
+    </div>
+  </div>
+
+  <!-- Onboarding -->
   <div id="onboarding" class="onboarding hidden">
     <div class="onboarding-card">
-      <h1 style="margin-bottom: 6px;">JCIL Isolate</h1>
-      <p>Your private, offline AI assistant. Everything stays on your device. No cloud. No tracking. No accounts.</p>
+      <img src="logo.jpg" class="onboarding-logo" alt="JCIL Isolate">
+      <h1>JCIL Isolate</h1>
+      <p>Your private, offline AI assistant. Everything stays on your device. No cloud. No tracking.</p>
       <input type="text" id="onboard-name" class="onboarding-input" placeholder="Enter your name" autofocus>
       <button id="onboard-btn" class="onboarding-btn">Get Started</button>
     </div>
   </div>
 
+  <!-- App -->
   <div id="app" class="app hidden">
     <div class="sidebar">
       <div class="sidebar-header">
@@ -603,10 +620,10 @@
           100% Offline
         </div>
       </div>
-
       <div id="error-banner" class="error-banner hidden">Ollama is not running. Start Ollama to use JCIL Isolate.</div>
 
       <div id="welcome" class="welcome">
+        <img src="logo.jpg" class="welcome-logo" alt="JCIL Isolate">
         <h1>JCIL Isolate</h1>
         <p>Your conversations never leave this device. No cloud, no tracking, no accounts. Just you and AI.</p>
         <div class="welcome-features">
@@ -639,270 +656,108 @@
   </div>
 
   <script>
-    let profile = null;
-    let conversations = [];
-    let currentConv = null;
-    let isGenerating = false;
+    let profile=null,conversations=[],currentConv=null,isGenerating=false;
 
-    async function init() {
-      // Run setup check first
-      const setup = await window.api.checkSetup();
+    async function init(){
+      const setup=await window.api.checkSetup();
+      if(!setup.ollamaInstalled||!setup.ollamaRunning||!setup.modelReady){document.getElementById('setup').classList.remove('hidden');await runSetup(setup);return;}
+      profile=await window.api.getProfile();
+      if(!profile){document.getElementById('onboarding').classList.remove('hidden');}
+      else{document.getElementById('app').classList.remove('hidden');await loadApp();}
+    }
 
-      if (!setup.ollamaInstalled || !setup.ollamaRunning || !setup.modelReady) {
-        document.getElementById('setup').classList.remove('hidden');
-        await runSetup(setup);
-        return;
-      }
+    function setStepStatus(id,status){
+      const icon=document.getElementById(id+'-icon');
+      if(status==='done'){icon.innerHTML='&#10003;';icon.className='step-icon done';}
+      else if(status==='fail'){icon.innerHTML='&#10007;';icon.className='step-icon fail';}
+      else if(status==='loading'){icon.innerHTML='&#9881;';icon.className='step-icon loading';}
+      else{icon.innerHTML='&#9675;';icon.className='step-icon';}
+    }
 
-      // Setup complete, proceed to app
-      profile = await window.api.getProfile();
-      if (!profile) {
-        document.getElementById('onboarding').classList.remove('hidden');
-      } else {
-        document.getElementById('app').classList.remove('hidden');
-        await loadApp();
+    async function runSetup(setup){
+      const s=document.getElementById('setup-status'),a=document.getElementById('setup-action-btn'),r=document.getElementById('setup-retry-btn');
+      if(!setup.ollamaInstalled){setStepStatus('step-ollama','fail');s.textContent='Ollama is required. Click below to download (free).';a.classList.remove('hidden');a.textContent='Download Ollama';a.onclick=()=>window.api.openOllamaDownload();r.onclick=()=>location.reload();return;}
+      setStepStatus('step-ollama','done');
+      if(!setup.ollamaRunning){setStepStatus('step-running','fail');s.textContent='Open Ollama from Applications, then click Retry.';r.onclick=()=>location.reload();return;}
+      setStepStatus('step-running','done');
+      if(setup.modelReady){setStepStatus('step-model','done');s.textContent='Ready!';setTimeout(()=>{document.getElementById('setup').classList.add('hidden');init();},1000);}
+      else{setStepStatus('step-model','loading');s.textContent='Setting up AI model... ~30 seconds.';r.classList.add('hidden');
+        const ok=await window.api.installModel();
+        if(ok){setStepStatus('step-model','done');s.textContent='Ready!';setTimeout(()=>{document.getElementById('setup').classList.add('hidden');init();},1500);}
+        else{setStepStatus('step-model','fail');s.textContent='Setup failed. Make sure Ollama is running.';r.classList.remove('hidden');r.onclick=()=>location.reload();}
       }
     }
 
-    function setStepStatus(id, status) {
-      const icon = document.getElementById(id + '-icon');
-      if (status === 'done') { icon.innerHTML = '&#10003;'; icon.className = 'step-icon done'; }
-      else if (status === 'fail') { icon.innerHTML = '&#10007;'; icon.className = 'step-icon fail'; }
-      else if (status === 'loading') { icon.innerHTML = '&#9881;'; icon.className = 'step-icon loading'; }
-      else { icon.innerHTML = '&#9675;'; icon.className = 'step-icon'; }
-    }
-
-    async function runSetup(setup) {
-      const statusEl = document.getElementById('setup-status');
-      const actionBtn = document.getElementById('setup-action-btn');
-      const retryBtn = document.getElementById('setup-retry-btn');
-
-      // Step 1: Ollama installed
-      if (setup.ollamaInstalled) {
-        setStepStatus('step-ollama', 'done');
-      } else {
-        setStepStatus('step-ollama', 'fail');
-        statusEl.textContent = 'Ollama is required. Click below to download it (free, 1 minute install).';
-        actionBtn.classList.remove('hidden');
-        actionBtn.textContent = 'Download Ollama';
-        actionBtn.onclick = () => window.api.openOllamaDownload();
-        retryBtn.onclick = () => location.reload();
-        return;
-      }
-
-      // Step 2: Ollama running
-      if (setup.ollamaRunning) {
-        setStepStatus('step-running', 'done');
-      } else {
-        setStepStatus('step-running', 'fail');
-        statusEl.textContent = 'Ollama is installed but not running. Open Ollama from your Applications folder, then click Retry.';
-        retryBtn.onclick = () => location.reload();
-        return;
-      }
-
-      // Step 3: Model
-      if (setup.modelReady) {
-        setStepStatus('step-model', 'done');
-        statusEl.textContent = 'Everything is ready!';
-        setTimeout(() => {
-          document.getElementById('setup').classList.add('hidden');
-          init();
-        }, 1000);
-      } else {
-        setStepStatus('step-model', 'loading');
-        statusEl.textContent = 'Setting up your AI model... This takes about 30 seconds on first launch.';
-        retryBtn.classList.add('hidden');
-
-        const success = await window.api.installModel();
-        if (success) {
-          setStepStatus('step-model', 'done');
-          statusEl.textContent = 'Ready to go!';
-          setTimeout(() => {
-            document.getElementById('setup').classList.add('hidden');
-            init();
-          }, 1500);
-        } else {
-          setStepStatus('step-model', 'fail');
-          statusEl.textContent = 'Model setup failed. Make sure Ollama is running and try again.';
-          retryBtn.classList.remove('hidden');
-          retryBtn.onclick = () => location.reload();
-        }
-      }
-    }
-
-    document.getElementById('onboard-btn').addEventListener('click', async () => {
-      const name = document.getElementById('onboard-name').value.trim();
-      if (!name) return;
-      profile = { name, createdAt: new Date().toISOString() };
-      await window.api.saveProfile(profile);
-      document.getElementById('onboarding').classList.add('hidden');
-      document.getElementById('app').classList.remove('hidden');
-      await loadApp();
+    document.getElementById('onboard-btn').addEventListener('click',async()=>{
+      const name=document.getElementById('onboard-name').value.trim();if(!name)return;
+      profile={name,createdAt:new Date().toISOString()};await window.api.saveProfile(profile);
+      document.getElementById('onboarding').classList.add('hidden');document.getElementById('app').classList.remove('hidden');await loadApp();
     });
+    document.getElementById('onboard-name').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('onboard-btn').click();});
 
-    document.getElementById('onboard-name').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') document.getElementById('onboard-btn').click();
-    });
+    async function loadApp(){conversations=await window.api.getConversations()||[];renderConversations();checkStatus();setInterval(checkStatus,30000);}
 
-    async function loadApp() {
-      conversations = await window.api.getConversations() || [];
-      renderConversations();
-      checkStatus();
-      setInterval(checkStatus, 30000);
+    async function checkStatus(){
+      const ok=await window.api.checkOllama();const d=document.getElementById('status-dot'),t=document.getElementById('status-text'),b=document.getElementById('error-banner');
+      if(ok){d.classList.remove('offline');t.textContent='Model ready';b.classList.add('hidden');}
+      else{d.classList.add('offline');t.textContent='Ollama offline';b.classList.remove('hidden');}
     }
 
-    async function checkStatus() {
-      const ok = await window.api.checkOllama();
-      const dot = document.getElementById('status-dot');
-      const text = document.getElementById('status-text');
-      const banner = document.getElementById('error-banner');
-      if (ok) {
-        dot.classList.remove('offline');
-        text.textContent = 'Model ready';
-        banner.classList.add('hidden');
-      } else {
-        dot.classList.add('offline');
-        text.textContent = 'Ollama offline';
-        banner.classList.remove('hidden');
-      }
-    }
-
-    function renderConversations() {
-      const list = document.getElementById('conv-list');
-      list.innerHTML = '';
-      conversations.forEach((conv, i) => {
-        const div = document.createElement('div');
-        div.className = 'conv-item' + (currentConv === i ? ' active' : '');
-        const title = conv.title || conv.messages[0]?.content?.substring(0, 30) || 'New Chat';
-        div.innerHTML = `<span>${title}</span><button class="conv-delete" onclick="deleteConv(event,${i})">×</button>`;
-        div.addEventListener('click', () => selectConv(i));
-        list.appendChild(div);
+    function renderConversations(){
+      const list=document.getElementById('conv-list');list.innerHTML='';
+      conversations.forEach((conv,i)=>{
+        const div=document.createElement('div');div.className='conv-item'+(currentConv===i?' active':'');
+        const title=conv.title||conv.messages[0]?.content?.substring(0,30)||'New Chat';
+        div.innerHTML=`<span>${title}</span><button class="conv-delete" onclick="deleteConv(event,${i})">×</button>`;
+        div.addEventListener('click',()=>selectConv(i));list.appendChild(div);
       });
     }
 
-    function selectConv(index) {
-      currentConv = index;
-      renderConversations();
-      renderMessages();
-      document.getElementById('welcome').classList.add('hidden');
-      document.getElementById('messages').classList.remove('hidden');
-      document.getElementById('chat-title').textContent = conversations[index].title || 'Conversation';
-    }
+    function selectConv(i){currentConv=i;renderConversations();renderMessages();document.getElementById('welcome').classList.add('hidden');document.getElementById('messages').classList.remove('hidden');document.getElementById('chat-title').textContent=conversations[i].title||'Conversation';}
 
-    function deleteConv(e, index) {
-      e.stopPropagation();
-      conversations.splice(index, 1);
-      window.api.saveConversations(conversations);
-      if (currentConv === index) {
-        currentConv = null;
-        document.getElementById('welcome').classList.remove('hidden');
-        document.getElementById('messages').classList.add('hidden');
-        document.getElementById('chat-title').textContent = 'New conversation';
-      } else if (currentConv > index) { currentConv--; }
+    function deleteConv(e,i){
+      e.stopPropagation();conversations.splice(i,1);window.api.saveConversations(conversations);
+      if(currentConv===i){currentConv=null;document.getElementById('welcome').classList.remove('hidden');document.getElementById('messages').classList.add('hidden');document.getElementById('chat-title').textContent='New conversation';}
+      else if(currentConv>i)currentConv--;
       renderConversations();
     }
 
-    document.getElementById('new-chat-btn').addEventListener('click', () => {
-      currentConv = null;
-      document.getElementById('welcome').classList.remove('hidden');
-      document.getElementById('messages').classList.add('hidden');
-      document.getElementById('chat-title').textContent = 'New conversation';
-      renderConversations();
-    });
+    document.getElementById('new-chat-btn').addEventListener('click',()=>{currentConv=null;document.getElementById('welcome').classList.remove('hidden');document.getElementById('messages').classList.add('hidden');document.getElementById('chat-title').textContent='New conversation';renderConversations();});
 
-    function renderMessages() {
-      const container = document.getElementById('messages');
-      container.innerHTML = '';
-      if (currentConv === null) return;
-      (conversations[currentConv].messages || []).forEach(msg => appendMessage(msg.role, msg.content));
-      container.scrollTop = container.scrollHeight;
+    function renderMessages(){
+      const c=document.getElementById('messages');c.innerHTML='';if(currentConv===null)return;
+      (conversations[currentConv].messages||[]).forEach(m=>appendMessage(m.role,m.content));c.scrollTop=c.scrollHeight;
     }
 
-    function appendMessage(role, content) {
-      const container = document.getElementById('messages');
-      const div = document.createElement('div');
-      div.className = 'message' + (role === 'user' ? ' user-msg' : '');
-      const label = role === 'user' ? (profile?.name || 'You') : 'JCIL Isolate';
-      const roleClass = role === 'user' ? 'user-role' : '';
-      div.innerHTML = `<div class="message-role ${roleClass}">${label}</div><div class="message-content">${formatContent(content)}</div>`;
-      container.appendChild(div);
-      container.scrollTop = container.scrollHeight;
-      return div;
+    function appendMessage(role,content){
+      const c=document.getElementById('messages'),div=document.createElement('div');
+      div.className='message'+(role==='user'?' user-msg':'');
+      const label=role==='user'?(profile?.name||'You'):'JCIL Isolate';
+      div.innerHTML=`<div class="message-role ${role==='user'?'user-role':''}">${label}</div><div class="message-content">${formatContent(content)}</div>`;
+      c.appendChild(div);c.scrollTop=c.scrollHeight;return div;
     }
 
-    function formatContent(text) {
-      if (!text) return '';
-      return text
-        .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
-        .replace(/`([^`]+)`/g, '<code>$1</code>')
-        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-        .replace(/\n/g, '<br>');
+    function formatContent(t){
+      if(!t)return'';
+      return t.replace(/```(\w*)\n([\s\S]*?)```/g,'<pre><code>$2</code></pre>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>').replace(/\n/g,'<br>');
     }
 
-    async function sendMessage() {
-      const input = document.getElementById('input');
-      const text = input.value.trim();
-      if (!text || isGenerating) return;
-
-      if (currentConv === null) {
-        conversations.unshift({ title: text.substring(0, 40), messages: [], createdAt: new Date().toISOString() });
-        currentConv = 0;
-        document.getElementById('welcome').classList.add('hidden');
-        document.getElementById('messages').classList.remove('hidden');
-        renderConversations();
-      }
-
-      conversations[currentConv].messages.push({ role: 'user', content: text });
-      appendMessage('user', text);
-      input.value = '';
-      input.style.height = '48px';
-
-      isGenerating = true;
-      document.getElementById('send-btn').disabled = true;
-      const typingDiv = appendMessage('assistant', '');
-      const contentEl = typingDiv.querySelector('.message-content');
-      contentEl.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
-
-      let fullResponse = '';
-      window.api.removeTokenListener();
-      window.api.removeDoneListener();
-
-      window.api.onToken((token) => {
-        if (contentEl.querySelector('.typing')) contentEl.innerHTML = '';
-        fullResponse += token;
-        contentEl.innerHTML = formatContent(fullResponse);
-        document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
-      });
-
-      window.api.onChatDone(() => {
-        conversations[currentConv].messages.push({ role: 'assistant', content: fullResponse });
-        window.api.saveConversations(conversations);
-        isGenerating = false;
-        document.getElementById('send-btn').disabled = false;
-        if (conversations[currentConv].messages.length === 2) {
-          document.getElementById('chat-title').textContent = conversations[currentConv].title;
-        }
-      });
-
-      try {
-        await window.api.chatStream(conversations[currentConv].messages.filter(m => m.role !== 'system'));
-      } catch (err) {
-        contentEl.innerHTML = `<span style="color: var(--red);">Error: ${err}. Is Ollama running?</span>`;
-        isGenerating = false;
-        document.getElementById('send-btn').disabled = false;
-      }
+    async function sendMessage(){
+      const input=document.getElementById('input'),text=input.value.trim();if(!text||isGenerating)return;
+      if(currentConv===null){conversations.unshift({title:text.substring(0,40),messages:[],createdAt:new Date().toISOString()});currentConv=0;document.getElementById('welcome').classList.add('hidden');document.getElementById('messages').classList.remove('hidden');renderConversations();}
+      conversations[currentConv].messages.push({role:'user',content:text});appendMessage('user',text);input.value='';input.style.height='52px';
+      isGenerating=true;document.getElementById('send-btn').disabled=true;
+      const td=appendMessage('assistant',''),ce=td.querySelector('.message-content');ce.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+      let full='';window.api.removeTokenListener();window.api.removeDoneListener();
+      window.api.onToken(tk=>{if(ce.querySelector('.typing'))ce.innerHTML='';full+=tk;ce.innerHTML=formatContent(full);document.getElementById('messages').scrollTop=document.getElementById('messages').scrollHeight;});
+      window.api.onChatDone(()=>{conversations[currentConv].messages.push({role:'assistant',content:full});window.api.saveConversations(conversations);isGenerating=false;document.getElementById('send-btn').disabled=false;if(conversations[currentConv].messages.length===2)document.getElementById('chat-title').textContent=conversations[currentConv].title;});
+      try{await window.api.chatStream(conversations[currentConv].messages.filter(m=>m.role!=='system'));}
+      catch(err){ce.innerHTML=`<span style="color:var(--red)">Error: ${err}</span>`;isGenerating=false;document.getElementById('send-btn').disabled=false;}
     }
 
-    document.getElementById('send-btn').addEventListener('click', sendMessage);
-    document.getElementById('input').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-    });
-    document.getElementById('input').addEventListener('input', function() {
-      this.style.height = '48px';
-      this.style.height = Math.min(this.scrollHeight, 200) + 'px';
-    });
-
+    document.getElementById('send-btn').addEventListener('click',sendMessage);
+    document.getElementById('input').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
+    document.getElementById('input').addEventListener('input',function(){this.style.height='52px';this.style.height=Math.min(this.scrollHeight,200)+'px';});
     init();
   </script>
 </body>
