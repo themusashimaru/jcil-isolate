@@ -29,7 +29,7 @@
         { "x": 410, "y": 220, "type": "link", "path": "/Applications" }
       ],
       "window": { "width": 540, "height": 380 },
-      "title": "Install JCIL Isolate"
+      "title": "Install-JCIL-Isolate"
     },
     "win": {
       "icon": "public/icon.ico",
