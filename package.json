@@ -1,0 +1,36 @@
+{
+  "name": "jcil-isolate",
+  "version": "1.0.0",
+  "description": "JCIL Isolate — Offline AI for secure, private conversations",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:mac": "electron-builder --mac",
+    "build:win": "electron-builder --win",
+    "dev": "electron ."
+  },
+  "build": {
+    "appId": "com.jcil.isolate",
+    "productName": "JCIL Isolate",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "public/icon.icns",
+      "target": ["dmg"]
+    },
+    "win": {
+      "icon": "public/icon.ico",
+      "target": ["nsis"]
+    },
+    "files": [
+      "src/**/*",
+      "public/**/*",
+      "Modelfile"
+    ]
+  },
+  "author": "Matthew Moser",
+  "license": "Proprietary",
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  }
+}
