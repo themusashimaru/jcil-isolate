@@ -790,7 +790,10 @@
       try{
         const msgs=conversations[currentConv].messages.filter(m=>m.role!=='system');
         const lang=profile?.language||'English';
-        if(lang!=='English'){msgs.unshift({role:'system',content:`IMPORTANT: You MUST respond in ${lang}. All your responses must be in ${lang}. Keep the same values, personality, and behavior — just respond in ${lang}.`});}
+        // Always inject current language as system message — picks up mid-conversation switches
+        msgs.unshift({role:'system',content:lang==='English'
+          ?'Respond in English.'
+          :`CRITICAL: You MUST respond ONLY in ${lang}. Every word of your response must be in ${lang}. Do not use English unless quoting Scripture references (e.g. John 3:16). Keep all values and personality identical.`});
         await window.api.chatStream(msgs);
       }
       catch(err){ce.innerHTML=`<span style="color:var(--red)">Error: ${err}</span>`;isGenerating=false;document.getElementById('send-btn').disabled=false;}
