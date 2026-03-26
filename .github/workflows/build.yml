@@ -14,13 +14,10 @@ jobs:
         with:
           node-version: 22
       - run: npm install
-      - name: Build Mac
-        run: npx electron-builder --mac --dir
+      - name: Build Mac ARM64
+        run: npx electron-builder --mac --arm64 --dir
       - name: Package Mac ARM
         run: cd dist/mac-arm64 && zip -r -9 "../JCIL-Isolate-mac-arm64.zip" "JCIL Isolate.app"
-      - name: Package Mac Intel
-        run: cd dist/mac && zip -r -9 "../JCIL-Isolate-mac-x64.zip" "JCIL Isolate.app"
-        continue-on-error: true
       - uses: actions/upload-artifact@v4
         with:
           name: mac-builds
@@ -34,7 +31,8 @@ jobs:
         with:
           node-version: 22
       - run: npm install
-      - run: npx electron-builder --win
+      - name: Build Windows
+        run: npx electron-builder --win --publish never
       - uses: actions/upload-artifact@v4
         with:
           name: windows-build
